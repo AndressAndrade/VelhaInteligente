@@ -17,6 +17,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JTextField;
 
 
+@SuppressWarnings("serial")
 public class Panel extends JPanel {
 	private JTextField textField;
 	private JTextField textField_1;
@@ -136,6 +137,7 @@ public class Panel extends JPanel {
 
 	}
 
+	@SuppressWarnings("unused")
 	private static void addPopup(Component component, final JPopupMenu popup) {
 		component.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
