@@ -16,14 +16,9 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>Biblioteca complementar/jgoodies-forms-1.8.0-sources.jar</name>
+			<name>src/Image/icon2.png</name>
 			<type>1</type>
-			<location>C:/Users/Jorge G Andrade/Desktop/VelhaInteligente/jgoodies-forms-1.8.0-sources.jar</location>
-		</link>
-		<link>
-			<name>Biblioteca complementar/jgoodies-forms-1.8.0.jar</name>
-			<type>1</type>
-			<location>C:/Users/Jorge G Andrade/Desktop/VelhaInteligente/jgoodies-forms-1.8.0.jar</location>
+			<location>C:/Users/Jorge G Andrade/Desktop/icon2.png</location>
 		</link>
 	</linkedResources>
 </projectDescription>
