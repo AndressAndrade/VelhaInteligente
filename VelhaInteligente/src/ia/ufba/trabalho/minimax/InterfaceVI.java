@@ -6,7 +6,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
-//import java.awt.Toolkit;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -57,7 +57,8 @@ public class InterfaceVI implements ActionListener{
 
 	private void initialize() {
 		frmVelhaInteligente = new JFrame();
-		//frmVelhaInteligente.setIconImage(Toolkit.getDefaultToolkit().getImage(InterfaceVI.class.getResource("/Image/icon2.png")));
+		frmVelhaInteligente.setResizable(false);
+		frmVelhaInteligente.setIconImage(Toolkit.getDefaultToolkit().getImage(InterfaceVI.class.getResource("/Imagens/icon2.png")));
 		frmVelhaInteligente.setTitle("Velha Inteligente - MiniMax");
 		frmVelhaInteligente.setBounds(100, 100, 638, 476);
 		frmVelhaInteligente.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
