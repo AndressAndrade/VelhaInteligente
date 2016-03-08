@@ -36,7 +36,8 @@ public class InterfaceVI implements ActionListener{
 	 */
 	private void initialize() {
 		frmVelhaInteligente = new JFrame();
-		frmVelhaInteligente.setIconImage(Toolkit.getDefaultToolkit().getImage(InterfaceVI.class.getResource("/Image/icon2.png")));
+		frmVelhaInteligente.setResizable(false);
+		frmVelhaInteligente.setIconImage(Toolkit.getDefaultToolkit().getImage(InterfaceVI.class.getResource("/ia/ufba/imagens/icon2.png")));
 		frmVelhaInteligente.setTitle("Velha Inteligente 0.1");
 		frmVelhaInteligente.setBounds(100, 100, 604, 513);
 		frmVelhaInteligente.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
