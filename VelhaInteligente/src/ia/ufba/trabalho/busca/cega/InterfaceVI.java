@@ -19,7 +19,7 @@ import java.awt.Color;
 public class InterfaceVI implements ActionListener{
 
 	static JFrame frmVelhaInteligente;
-	static JButton res[] = new JButton[9];
+	static JButton res[][] = new JButton[3][3];
 	static int count = 0;
 	static int numPerdas = 0;
 	static int numEmpates = 0;
@@ -48,10 +48,12 @@ public class InterfaceVI implements ActionListener{
 	}
 	
 	private void novojogo(){
-		for(int i =0; i < 9; i++){
-			res[i].setText("");
-			res[i].setEnabled(true);
+		for(int i =0; i < 3; i++){
+			for (int j = 0; j < 3; j++) {
+			res[i][j].setText("");
+			res[i][j].setEnabled(true);
 			count = 0;
+			}
 		}
 	}
 
@@ -64,21 +66,23 @@ public class InterfaceVI implements ActionListener{
 		frmVelhaInteligente.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmVelhaInteligente.getContentPane().setLayout(null);
 		
-		for (int i = 0; i < 9; i++) {
-			res[i] = new JButton("");
-			frmVelhaInteligente.getContentPane().add(res[i]);
-			res[i].addActionListener(this);
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+			res[i][j] = new JButton("");
+			frmVelhaInteligente.getContentPane().add(res[i][j]);
+			res[i][j].addActionListener(this);
+			}
 		}
 		
-		res[0].setBounds(38, 93, 103, 91);
-		res[1].setBounds(151, 93, 103, 91);
-		res[2].setBounds(264, 93, 103, 91);
-		res[3].setBounds(38, 195, 103, 91);
-		res[4].setBounds(151, 195, 103, 91);
-		res[5].setBounds(264, 195, 103, 91);
-		res[6].setBounds(38, 297, 103, 91);
-		res[7].setBounds(151, 297, 103, 91);
-		res[8].setBounds(264, 297, 103, 91);
+		res[0][0].setBounds(38, 93, 103, 91);
+		res[0][1].setBounds(151, 93, 103, 91);
+		res[0][2].setBounds(264, 93, 103, 91);
+		res[1][0].setBounds(38, 195, 103, 91);
+		res[1][1].setBounds(151, 195, 103, 91);
+		res[1][2].setBounds(264, 195, 103, 91);
+		res[2][0].setBounds(38, 297, 103, 91);
+		res[2][1].setBounds(151, 297, 103, 91);
+		res[2][2].setBounds(264, 297, 103, 91);
 		
 		JLabel Nome = new JLabel("Velha Inteligente");
 		Nome.setFont(new Font("Segoe UI Symbol", Font.BOLD, 24));
@@ -166,12 +170,12 @@ public class InterfaceVI implements ActionListener{
 	}
 	
 	private void verifica(){
-		if(res[0].getText().equals("X") && res[1].getText().equals("X")&& res[2].getText().equals("X") || res[0].getText().equals("X") && res[3].getText().equals("X")&& res[6].getText().equals("X") || res[1].getText().equals("X") && res[4].getText().equals("X")&& res[7].getText().equals("X") || res[2].getText().equals("X") && res[5].getText().equals("X")&& res[8].getText().equals("X") || res[0].getText().equals("X") && res[4].getText().equals("X")&& res[8].getText().equals("X") || res[2].getText().equals("X") && res[4].getText().equals("X")&& res[6].getText().equals("X") || res[3].getText().equals("X") && res[4].getText().equals("X")&& res[5].getText().equals("X") || res[6].getText().equals("X") && res[7].getText().equals("X")&& res[8].getText().equals("X")){
+		if(res[0][0].getText().equals("X") && res[0][1].getText().equals("X")&& res[0][2].getText().equals("X") ){
 			JOptionPane.showMessageDialog(null, "Parabéns X", "VOCÊ GANHOU!", JOptionPane.INFORMATION_MESSAGE);
 			Vitorias();
 			novojogo();
 		}
-		if(res[0].getText().equals("O") && res[1].getText().equals("O")&& res[2].getText().equals("O") || res[0].getText().equals("O") && res[3].getText().equals("O")&& res[6].getText().equals("O") || res[1].getText().equals("O") && res[4].getText().equals("O")&& res[7].getText().equals("O") || res[2].getText().equals("O") && res[5].getText().equals("O")&& res[8].getText().equals("O") || res[0].getText().equals("O") && res[4].getText().equals("O")&& res[8].getText().equals("O") || res[2].getText().equals("O") && res[4].getText().equals("O")&& res[6].getText().equals("O") || res[3].getText().equals("O") && res[4].getText().equals("O")&& res[5].getText().equals("O") || res[6].getText().equals("O") && res[7].getText().equals("O")&& res[8].getText().equals("O")){
+		if(res[0][0].getText().equals("O") && res[0][1].getText().equals("O")&& res[0][2].getText().equals("O") ){
 			JOptionPane.showMessageDialog(null, "Parabéns O", "VOCÊ GANHOU!", JOptionPane.INFORMATION_MESSAGE);
 			Perdas();
 			novojogo();
@@ -188,20 +192,24 @@ public class InterfaceVI implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		// 
 		if(count % 2 == 0){
-			for (int i = 0; i < 9; i++) {
-				if (e.getSource() == res[i]) {
-					res[i].setText("X");
-					res[i].setEnabled(false);
+			for (int i = 0; i < 3; i++) {
+				for (int j = 0; j < 3; j++) {
+				if (e.getSource() == res[i][j]) {
+					res[i][j].setText("X");
+					res[i][j].setEnabled(false);
 					count += 1;
+				}
 				}
 			}
 		}
 		else{
-			for (int i = 0; i < 9; i++) {
-				if (e.getSource() == res[i]) {
-					res[i].setText("O");
-					res[i].setEnabled(false);
+			for (int i = 0; i < 3; i++) {
+				for (int j = 0; j < 3; j++) {
+				if (e.getSource() == res[i][j]) {
+					res[i][j].setText("O");
+					res[i][j].setEnabled(false);
 					count += 1;
+				}
 				}
 			}
 		}
