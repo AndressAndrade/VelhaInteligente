@@ -76,7 +76,7 @@ class Classificacao {
 }
 
 /**
- * Classe principal da aplicação, define a interface gráfica e a IA.
+ * Classe principal da aplicacao, define a interface grafica e a IA.
  */
 public class InterfaceVI implements ActionListener {
 
