@@ -9,6 +9,8 @@ public void Profundidade(ArrayList<String> arvore,String solucao, int limite){
 			resultado = arvore.get(i);
 		}else if(i== limite){
 			return;
+		}else{
+			//Profundidade(arvore, solucao, limite);
 		}
 	}
 
