@@ -1,8 +1,8 @@
 /**
  * Trabalho de MATA64 - Inteligencia Artificial
  * 
- * Implementação da inteligencia artificial para o Jogo da Velha (em ingles TicTacToe)
- * utilizando o conceito de minimazacao, maximzacao minimax.
+ * Implementacao da inteligencia artificial para o Jogo da Velha 
+ * utilizando o conceito de minimazacao, maximizacao minimax.
  * 
  * @author Andressa Andrade
  * @author Renata Antunes
@@ -56,7 +56,7 @@ class Jogada {
 
 /**
  * Classificacao e uma classe que contem a pontuacao de uma determinada jogada,
- * Ela é utilizada para classificar o quao bom uma jogada pode ser.
+ * Ela e utilizada para classificar o quao bom uma jogada pode ser.
  */
 class Classificacao {
 
@@ -348,7 +348,7 @@ public class InterfaceVI implements ActionListener {
     /**
      * Modifica a interface de acordo com a jogada do computador
      * 
-     * @param jogada Jogada que a inteligência artificial deseja fazer
+     * @param jogada Jogada que a inteligencia artificial deseja fazer
      */
     void fazerJogadaComputador(Jogada jogada) {
         res[jogada.i][jogada.j].setText("O");
@@ -396,9 +396,9 @@ public class InterfaceVI implements ActionListener {
     }
 
     /**
-     * Retorna o menor valor de uma lista de pontos adquiridos da simulação de jogadas
+     * Retorna o menor valor de uma lista de pontos adquiridos da simulacao de jogadas
      * 
-     * @param pontos    Lista de pontos adquiridos de acordo com a simulação
+     * @param pontos    Lista de pontos adquiridos de acordo com a simulacao
      * @return          Retorna o menor valor de uma lista de pontos
      */
     public int retornaMinimo(List<Integer> pontos) {
@@ -416,9 +416,9 @@ public class InterfaceVI implements ActionListener {
     }
     
     /**
-     * Retorna o maior valor de uma lista de pontos adquiridos da simulação de jogadas
+     * Retorna o maior valor de uma lista de pontos adquiridos da simulacao de jogadas
      * 
-     * @param pontos    Lista de pontos adquiridos de acordo com a simulação
+     * @param pontos    Lista de pontos adquiridos de acordo com a simulacao
      * @return          Retorna o maior valor de uma lista de pontos
      */
     public int retornaMaximo(List<Integer> pontos) {
@@ -460,10 +460,10 @@ public class InterfaceVI implements ActionListener {
             Jogada jogadaAtual = jogadasDisponivelAux.get(i);
 
             // Se a vez for do computador, chama recursivamente minimax e armazena o retorno
-            // dessa execução, no final adiciona a pontuação de retorno a lista de pontuacoes
+            // dessa execucaoo, no final adiciona a pontuacao de retorno a lista de pontuacoes
             // de todas as jogadas disponiveis, se a profundidade for 0 entao temos que essa
             // eh a proxima jogada do computador, logo salvamos essa jogada para depois compararmos
-            // com as outras, e verificarmos se ela eh ou não a melhor jogada a ser efetuada
+            // com as outras, e verificarmos se ela eh ou nao a melhor jogada a ser efetuada
             if (vez == COMPUTADOR) {
                 fazerJogadaComputadorFalso(jogadaAtual);
                 int pontuacaoAtual = minimax(profundidade + 1, PESSOA);
