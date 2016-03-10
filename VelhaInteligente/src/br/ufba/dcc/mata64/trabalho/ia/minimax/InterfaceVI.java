@@ -1,11 +1,22 @@
-package ia.ufba.trabalho.minimax;
+/*
+ * Trabalho de MATA64 - InteligÃªncia Artificial
+ * 
+ * ImplementaÃ§Ã£o da inteligÃªncia artificial para o Jogo da Velha (em inglÃªs TicTacToe)
+ * utilizando o conceito de minimazaÃ§Ã£o, maximzaÃ§Ã£o minimax.
+ * 
+ * @author Andressa Andrade
+ * @author Renata Antunes
+ * @author Virginia de Paula
+ * @version 1.0
+ */
+package br.ufba.dcc.mata64.trabalho.ia.minimax;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import java.awt.Font;
-//import java.awt.Toolkit;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -16,30 +27,39 @@ import javax.swing.border.TitledBorder;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
 
+
 class Jogada {
+
     int x, y;
+
     public Jogada(int x, int y) {
         this.x = x;
         this.y = y;
     }
     
+    @Override
+    public String toString() {
+        return "[" + x + ", " + y + "]";
+    }
 }
 
 class Classificacao {
-    int     pontuacao;
-    Jogada  jogadas;
-    
+
+    int pontuacao;
+    Jogada jogadas;
+
     Classificacao(int pontuacao, Jogada jogadas) {
         this.pontuacao = pontuacao;
         this.jogadas = jogadas;
     }
 }
 
-public class InterfaceVI implements ActionListener{
+public class InterfaceVI implements ActionListener {
+
     static int      count = 0;
     static int      numPerdas = 0;
     static int      numEmpates = 0;
-    static int      numVitorias = 0; // Impossível!
+    static int      numVitorias = 0; // Impossï¿½vel!
     static JFrame   frmVelhaInteligente;
     static JButton  res[][] = new JButton[3][3];
     static JLabel   vit;
@@ -47,16 +67,17 @@ public class InterfaceVI implements ActionListener{
     static JLabel   per;
     static int      COMPUTADOR = 0;
     static int      PESSOA = 1;
-    
-    List<Jogada>   jogadasDisponiveis;
+
+    List<Jogada>        jogadasDisponiveis;
     List<Classificacao> nosFilhos;
-    Jogada         computador;
+    Jogada              computador;
 
     private void initialize() {
         frmVelhaInteligente = new JFrame();
         frmVelhaInteligente.setResizable(false);
-        //frmVelhaInteligente.setIconImage(Toolkit.getDefaultToolkit().getImage(InterfaceVI.class.getResource("/Imagens/icon2.png")));
-        frmVelhaInteligente.setTitle("Velha Inteligente - Busca Cega");
+        frmVelhaInteligente.setIconImage(Toolkit.getDefaultToolkit()
+                .getImage(InterfaceVI.class.getResource("../assets/icon.png")));
+        frmVelhaInteligente.setTitle("Velha Inteligente - Minimax");
         frmVelhaInteligente.setBounds(100, 100, 638, 476);
         frmVelhaInteligente.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frmVelhaInteligente.getContentPane().setLayout(null);
@@ -131,7 +152,11 @@ public class InterfaceVI implements ActionListener{
 
         JButton btnSobreOJogo = new JButton("Sobre o Jogo");
         btnSobreOJogo.addActionListener((ActionEvent e) -> {
-            JOptionPane.showMessageDialog(null, "Velha Inteligente \nJogo desenvolvido por Andressa Andrade, Renata Antunes e VirgÃ­nia de Paula. \nDesenvolvido para a disciplina de InteligÃªncia Artificial ministrada pela Professora Dra. Tatiane Nogueira.", "Sobre o Jogo", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Velha Inteligente \n"
+                    + "Jogo desenvolvido por Andressa Andrade, Renata Antunes e VirgÃ­nia de Paula.\n"
+                    + "Desenvolvido para a disciplina de InteligÃªncia Artificial ministrada pela "
+                    + "Professora Dra. Tatiane Nogueira.", "Sobre o Jogo",
+                    JOptionPane.INFORMATION_MESSAGE);
         });
         btnSobreOJogo.setToolTipText("");
         btnSobreOJogo.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -144,95 +169,102 @@ public class InterfaceVI implements ActionListener{
         frmVelhaInteligente.getContentPane().add(panel_1);
 
     }
-    
+
     public InterfaceVI() {
         initialize();
     }
 
-    private void reset(){
+    private void reset() {
         novojogo();
         numVitorias = 0;
         numEmpates = 0;
         numPerdas = 0;
-        vit.setText("Vitórias: " + numVitorias);
+        vit.setText("Vitorias: " + numVitorias);
         emp.setText("Empates: " + numEmpates);
         per.setText("Perdas: " + numPerdas);
     }
 
-    private void novojogo(){
-        for(int i =0; i < 3; i++){
+    private void novojogo() {
+        for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 res[i][j].setText("");
                 res[i][j].setEnabled(true);
                 count = 0;
             }
         }
+        System.out.println("\n--------------------------\n"
+                           + "-------- NovoJogo --------\n"
+                           + "--------------------------\n");
     }
 
-    private boolean Perdas(){
-        if(    res[0][0].getText().equals("O") && res[0][1].getText().equals("O")&& res[0][2].getText().equals("O") 
-            || res[1][0].getText().equals("O") && res[1][1].getText().equals("O")&& res[1][2].getText().equals("O") 
-            || res[2][0].getText().equals("O") && res[2][1].getText().equals("O")&& res[2][2].getText().equals("O") 
-            || res[0][0].getText().equals("O") && res[1][0].getText().equals("O")&& res[2][0].getText().equals("O") 
-            || res[0][1].getText().equals("O") && res[1][1].getText().equals("O")&& res[2][1].getText().equals("O") 
-            || res[0][2].getText().equals("O") && res[1][2].getText().equals("O")&& res[2][2].getText().equals("O") 
-            || res[0][0].getText().equals("O") && res[1][1].getText().equals("O")&& res[2][2].getText().equals("O") 
-            || res[0][2].getText().equals("O") && res[1][1].getText().equals("O")&& res[2][0].getText().equals("O")){
+    private boolean Perdas() {
+        if (res[0][0].getText().equals("O") && res[0][1].getText().equals("O") && res[0][2].getText().equals("O")
+                || res[1][0].getText().equals("O") && res[1][1].getText().equals("O") && res[1][2].getText().equals("O")
+                || res[2][0].getText().equals("O") && res[2][1].getText().equals("O") && res[2][2].getText().equals("O")
+                || res[0][0].getText().equals("O") && res[1][0].getText().equals("O") && res[2][0].getText().equals("O")
+                || res[0][1].getText().equals("O") && res[1][1].getText().equals("O") && res[2][1].getText().equals("O")
+                || res[0][2].getText().equals("O") && res[1][2].getText().equals("O") && res[2][2].getText().equals("O")
+                || res[0][0].getText().equals("O") && res[1][1].getText().equals("O") && res[2][2].getText().equals("O")
+                || res[0][2].getText().equals("O") && res[1][1].getText().equals("O") && res[2][0].getText().equals("O")) {
 
             return (true);
         }
         return false;
     }
 
-    private boolean Vitorias(){ // Impossível!
-        if(    res[0][0].getText().equals("X") && res[0][1].getText().equals("X")&& res[0][2].getText().equals("X") 
-            || res[1][0].getText().equals("X") && res[1][1].getText().equals("X")&& res[1][2].getText().equals("X") 
-            || res[2][0].getText().equals("X") && res[2][1].getText().equals("X")&& res[2][2].getText().equals("X") 
-            || res[0][0].getText().equals("X") && res[1][0].getText().equals("X")&& res[2][0].getText().equals("X") 
-            || res[0][1].getText().equals("X") && res[1][1].getText().equals("X")&& res[2][1].getText().equals("X") 
-            || res[0][2].getText().equals("X") && res[1][2].getText().equals("X")&& res[2][2].getText().equals("X") 
-            || res[0][0].getText().equals("X") && res[1][1].getText().equals("X")&& res[2][2].getText().equals("X") 
-            || res[0][2].getText().equals("X") && res[1][1].getText().equals("X")&& res[2][0].getText().equals("X")){
-           
-            return (true);
-        }	
-        return (false);
-    }
+    private boolean Vitorias() { // Impossï¿½vel!
+        if (res[0][0].getText().equals("X") && res[0][1].getText().equals("X") && res[0][2].getText().equals("X")
+                || res[1][0].getText().equals("X") && res[1][1].getText().equals("X") && res[1][2].getText().equals("X")
+                || res[2][0].getText().equals("X") && res[2][1].getText().equals("X") && res[2][2].getText().equals("X")
+                || res[0][0].getText().equals("X") && res[1][0].getText().equals("X") && res[2][0].getText().equals("X")
+                || res[0][1].getText().equals("X") && res[1][1].getText().equals("X") && res[2][1].getText().equals("X")
+                || res[0][2].getText().equals("X") && res[1][2].getText().equals("X") && res[2][2].getText().equals("X")
+                || res[0][0].getText().equals("X") && res[1][1].getText().equals("X") && res[2][2].getText().equals("X")
+                || res[0][2].getText().equals("X") && res[1][1].getText().equals("X") && res[2][0].getText().equals("X")) {
 
-    private boolean Empates(){
-        if(count == 9){ 
             return (true);
         }
         return (false);
     }
-    
-    private boolean Verifica(){
-        if(Vitorias()){
-            JOptionPane.showMessageDialog(null, "Parabéns, você ganhou!", "GANHOU!", JOptionPane.INFORMATION_MESSAGE);
+
+    private boolean Empates() {
+        if (count == 9) {
+            return (true);
+        }
+        return (false);
+    }
+
+    private boolean Verifica() {
+        if (Vitorias()) {
+            JOptionPane.showMessageDialog(null, "Parabï¿½ns, vocï¿½ ganhou!", "GANHOU!", JOptionPane.INFORMATION_MESSAGE);
+            System.out.println("----- Vitoria Humano -----\n"
+                             + "--------------------------");
             novojogo();
             numVitorias += 1;
             vit.setText("VitÃ³rias: " + numVitorias);
             return true;
-        }
-        else if(Perdas()){
-            JOptionPane.showMessageDialog(null, "Que pena, você perdeu!", "PERDEU!", JOptionPane.INFORMATION_MESSAGE);
+        } else if (Perdas()) {
+            JOptionPane.showMessageDialog(null, "Que pena, vocï¿½ perdeu!", "PERDEU!", JOptionPane.INFORMATION_MESSAGE);
+            System.out.println("------- Vitoria IA -------\n"
+                             + "--------------------------");
             novojogo();
             numPerdas += 1;
             per.setText("Perdas: " + numPerdas);
             return true;
-        }
-        else if(Empates()){
+        } else if (Empates()) {
             JOptionPane.showMessageDialog(null, "Deu Velha!", "EMPATOU!", JOptionPane.INFORMATION_MESSAGE);
+            System.out.println("--------- Empate ---------\n"
+                             + "--------------------------");
             novojogo();
             numEmpates += 1;
             emp.setText("Empates: " + numEmpates);
             return true;
         }
-        
+
         return false;
     }
 
-    public List<Jogada> getJogadaDisponiveis() {
+    List<Jogada> getJogadaDisponiveis() {
         jogadasDisponiveis = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -241,97 +273,101 @@ public class InterfaceVI implements ActionListener{
                 }
             }
         }
-      
+
         return jogadasDisponiveis;
     }
-    
-    public void fazerJogadaComputador(Jogada jogada){
+
+    void fazerJogadaComputador(Jogada jogada) {
         res[jogada.x][jogada.y].setText("O");
         res[jogada.x][jogada.y].setEnabled(false);
         count += 1;
     }
-    
-    public void fazerJogadaComputadorFalso(Jogada jogada){
+
+    void fazerJogadaComputadorFalso(Jogada jogada) {
         res[jogada.x][jogada.y].setText("O");
     }
-    
-    public void fazerJogadaPessoaFalso(Jogada jogada){
+
+    void fazerJogadaPessoaFalso(Jogada jogada) {
         res[jogada.x][jogada.y].setText("X");
     }
-    
-    public Jogada retornaMelhorJogada(){
+
+    Jogada retornaMelhorJogada() {
         int MAX = Integer.MIN_VALUE;
         int melhor = -1;
-        
-        for(int i = 0; i < nosFilhos.size(); i++){
-            if(MAX < nosFilhos.get(i).pontuacao){
+
+        for (int i = 0; i < nosFilhos.size(); i++) {
+            if (MAX < nosFilhos.get(i).pontuacao) {
                 MAX = nosFilhos.get(i).pontuacao;
                 melhor = i;
             }
         }
-        
+
         return nosFilhos.get(melhor).jogadas;
     }
-    
-    public int retornaMinimo(List<Integer> pontos){
+
+    public int retornaMinimo(List<Integer> pontos) {
         int menor = Integer.MAX_VALUE;
         int posicao = -1;
-        
-        for(int i = 0; i < pontos.size(); i++){
-            if(pontos.get(i) < menor){
+
+        for (int i = 0; i < pontos.size(); i++) {
+            if (pontos.get(i) < menor) {
                 menor = pontos.get(i);
                 posicao = i;
             }
         }
-        
+
         return pontos.get(posicao);
     }
-    
-    public int retornaMaximo(List<Integer> pontos){
+
+    public int retornaMaximo(List<Integer> pontos) {
         int maior = Integer.MIN_VALUE;
         int posicao = -1;
-        
-        for(int i = 0; i < pontos.size(); i++){
-            if(pontos.get(i) > maior){
+
+        for (int i = 0; i < pontos.size(); i++) {
+            if (pontos.get(i) > maior) {
                 maior = pontos.get(i);
                 posicao = i;
             }
         }
-        
+
         return pontos.get(posicao);
     }
-    
-    public int minimax(int profundidade, int vez){
-        if(Vitorias()) return -1;
-        else if(Perdas()) return +1;
-        
+
+    public int minimax(int profundidade, int vez) {
+        if (Vitorias()) {
+            return -1;
+        } else if (Perdas()) {
+            return +1;
+        }
+
         List<Jogada> jogadasDisponivelAux = getJogadaDisponiveis();
-        if(jogadasDisponivelAux.isEmpty()) return 0;
+        if (jogadasDisponivelAux.isEmpty()) {
+            return 0;
+        }
         List<Integer> pontuacao = new ArrayList<>();
-        
+
         for (int i = 0; i < jogadasDisponivelAux.size(); i++) {
             Jogada j = jogadasDisponivelAux.get(i);
-            
-            if(vez == COMPUTADOR){
+
+            if (vez == COMPUTADOR) {
                 fazerJogadaComputadorFalso(j);
                 int pontuacaoAtual = minimax(profundidade + 1, PESSOA);
                 pontuacao.add(pontuacaoAtual);
-                
-                if(profundidade == 0){
+
+                if (profundidade == 0) {
                     nosFilhos.add(new Classificacao(pontuacaoAtual, j));
                 }
-            }
-            else if(vez == PESSOA){
+            } else if (vez == PESSOA) {
                 fazerJogadaPessoaFalso(j);
                 pontuacao.add((minimax(profundidade + 1, COMPUTADOR)));
             }
             res[j.x][j.y].setText("");
         }
-        
+
         return vez == COMPUTADOR ? retornaMaximo(pontuacao) : retornaMinimo(pontuacao);
     }
-    
- 
+
+    @Override
     public void actionPerformed(ActionEvent e) {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -342,36 +378,36 @@ public class InterfaceVI implements ActionListener{
                 }
             }
         }
-        
+
         // X = i ; Y = j
-        if(Verifica())
+        if (Verifica()) {
             return;
-        
+        }
+
         nosFilhos = new ArrayList<>();
         minimax(0, COMPUTADOR);
-        
+
         System.out.println("-------- RODADA " + count + " --------");
-        for(Classificacao cla : nosFilhos){
-            //System.out.println("Jogada: " + cla.jogadas + " Pontuação: " + cla.pontuacao);
-            System.out.println(" Pontuação: " + cla.pontuacao);
-        }
+        nosFilhos.stream().forEach((classificacao) -> {
+            System.out.println("Jogada: " + classificacao.jogadas
+            + " Pontuacao: " + classificacao.pontuacao);
+        });
         System.out.println("--------------------------");
-        
+
         fazerJogadaComputador(retornaMelhorJogada());
-        
-        if(Verifica())
-            return;
+
+        Verifica();
     }
-    
+
     @SuppressWarnings("unused")
-	public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         InterfaceVI interfaceVI = new InterfaceVI();
         frmVelhaInteligente.setVisible(true);
-        System.out.println("+++++ Jogo da Velha - MiniMax +++++\n"+
-                           "++++++++ Velha Inteligente ++++++++\n" +
-                           "Desenvolvido por: \n" +
-                           "Andressa Andrade,\n" + 
-                           "Renata Antunes,\n" +
-                           "Virginia De Paula \n \n");
+        System.out.println("+++++ Jogo da Velha - MiniMax +++++\n"
+                + "++++++++ Velha Inteligente ++++++++\n\n"
+                + "Desenvolvido por: \n"
+                + "\tAndressa Andrade,\n"
+                + "\tRenata Antunes,\n"
+                + "\tVirginia De Paula \n");
     }
 }

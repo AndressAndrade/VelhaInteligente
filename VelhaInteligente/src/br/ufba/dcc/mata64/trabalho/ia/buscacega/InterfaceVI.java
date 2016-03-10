@@ -1,4 +1,4 @@
-package ia.ufba.trabalho.busca.cega;
+package br.ufba.dcc.mata64.trabalho.ia.buscacega;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
@@ -40,7 +40,7 @@ public class InterfaceVI implements ActionListener{
     static int      count = 0;
     static int      numPerdas = 0;
     static int      numEmpates = 0;
-    static int      numVitorias = 0; // Impossível!
+    static int      numVitorias = 0; // Impossï¿½vel!
     static JFrame   frmVelhaInteligente;
     static JButton  res[][] = new JButton[3][3];
     static JLabel   vit;
@@ -106,7 +106,7 @@ public class InterfaceVI implements ActionListener{
         lblNewLabel.setBounds(20, 61, 143, 24);
         panel.add(lblNewLabel);
 
-        vit = new JLabel("Vitórias: 0");
+        vit = new JLabel("Vitï¿½rias: 0");
         vit.setFont(new Font("Tahoma", Font.PLAIN, 14));
         vit.setBounds(20, 113, 143, 14);
         panel.add(vit);
@@ -155,7 +155,7 @@ public class InterfaceVI implements ActionListener{
         numVitorias = 0;
         numEmpates = 0;
         numPerdas = 0;
-        vit.setText("Vitórias: " + numVitorias);
+        vit.setText("Vitï¿½rias: " + numVitorias);
         emp.setText("Empates: " + numEmpates);
         per.setText("Perdas: " + numPerdas);
     }
@@ -185,7 +185,7 @@ public class InterfaceVI implements ActionListener{
         return false;
     }
 
-    private boolean Vitorias(){ // Possível!
+    private boolean Vitorias(){ // Possï¿½vel!
         if(    res[0][0].getText().equals("X") && res[0][1].getText().equals("X")&& res[0][2].getText().equals("X") 
             || res[1][0].getText().equals("X") && res[1][1].getText().equals("X")&& res[1][2].getText().equals("X") 
             || res[2][0].getText().equals("X") && res[2][1].getText().equals("X")&& res[2][2].getText().equals("X") 
@@ -209,14 +209,14 @@ public class InterfaceVI implements ActionListener{
     
     private boolean Verifica(){
         if(Vitorias()){
-            JOptionPane.showMessageDialog(null, "Parabéns, você ganhou!", "GANHOU!", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Parabï¿½ns, vocï¿½ ganhou!", "GANHOU!", JOptionPane.INFORMATION_MESSAGE);
             novojogo();
             numVitorias += 1;
-            vit.setText("Vitórias: " + numVitorias);
+            vit.setText("Vitï¿½rias: " + numVitorias);
             return true;
         }
         else if(Perdas()){
-            JOptionPane.showMessageDialog(null, "Que pena, você perdeu!", "PERDEU!", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Que pena, vocï¿½ perdeu!", "PERDEU!", JOptionPane.INFORMATION_MESSAGE);
             novojogo();
             numPerdas += 1;
             per.setText("Perdas: " + numPerdas);
