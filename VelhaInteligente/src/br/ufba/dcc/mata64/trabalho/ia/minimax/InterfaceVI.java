@@ -143,7 +143,7 @@ public class InterfaceVI implements ActionListener {
 
         JPanel panel = new JPanel();
         panel.setToolTipText("");
-        panel.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Est\u00E1tisticas", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
+        panel.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Estatísticas", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
         panel.setBounds(399, 74, 213, 237);
         frmVelhaInteligente.getContentPane().add(panel);
         panel.setLayout(null);
@@ -516,7 +516,7 @@ public class InterfaceVI implements ActionListener {
         NumberFormat formatter = new DecimalFormat("#0.00");
         double difference = (end_time - start_time)/1e6;
         System.out.println(   "-------- RODADA " + count + " --------\n"
-                            + "Custo em ns: " + formatter.format(difference) + "\n"
+                            + "Tempo execucao em ns: " + formatter.format(difference) + "\n"
                             +"--------------------------");
 
         nosFilhos.stream().forEach((classificacao) -> {
