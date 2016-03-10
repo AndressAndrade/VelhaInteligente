@@ -298,7 +298,7 @@ public class InterfaceVI implements ActionListener {
      */
     private boolean Verifica() {
         if (Vitorias()) {       // Verifica se houve uma vitoria da pessoa
-            JOptionPane.showMessageDialog(null, "Parab�ns, voc� ganhou!", "GANHOU!", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Parabens, voce ganhou!", "GANHOU!", JOptionPane.INFORMATION_MESSAGE);
             System.out.println("----- Vitoria Humano -----\n"
                              + "--------------------------");
             novojogo();
@@ -306,7 +306,7 @@ public class InterfaceVI implements ActionListener {
             vit.setText("Vitórias: " + numVitorias);
             return true;
         } else if (Perdas()) {  // Verifica se houve uma vitoria do computador
-            JOptionPane.showMessageDialog(null, "Que pena, voc� perdeu!", "PERDEU!", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Que pena, voce perdeu!", "PERDEU!", JOptionPane.INFORMATION_MESSAGE);
             System.out.println("------- Vitoria IA -------\n"
                              + "--------------------------");
             novojogo();
