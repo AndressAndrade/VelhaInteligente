@@ -376,114 +376,9 @@ public class InterfaceVI implements ActionListener {
         res[jogada.i][jogada.j].setText("X");
     }
 
-    /**
-     * Retorna a melhor jogada possível, para a IA
-     * 
-     * @return Retorna a melhor jogada dentre uma lista de jogadas possiveis
-     */
-    Jogada retornaMelhorJogada() {
-        int MAX = Integer.MIN_VALUE;
-        int melhor = -1;
-
-        for (int i = 0; i < nosFilhos.size(); i++) {
-            if (MAX < nosFilhos.get(i).pontuacao) {
-                MAX = nosFilhos.get(i).pontuacao;
-                melhor = i;
-            }
-        }
-
-        return nosFilhos.get(melhor).jogada;
-    }
-
-    /**
-     * Retorna o menor valor de uma lista de pontos adquiridos da simulação de jogadas
-     * 
-     * @param pontos    Lista de pontos adquiridos de acordo com a simulação
-     * @return          Retorna o menor valor de uma lista de pontos
-     */
-    public int retornaMinimo(List<Integer> pontos) {
-        int menor = Integer.MAX_VALUE;
-        int posicao = -1;
-
-        for (int i = 0; i < pontos.size(); i++) {
-            if (pontos.get(i) < menor) {
-                menor = pontos.get(i);
-                posicao = i;
-            }
-        }
-
-        return pontos.get(posicao);
-    }
+    // ----- IA IMPLEMENTATION
     
-    /**
-     * Retorna o maior valor de uma lista de pontos adquiridos da simulação de jogadas
-     * 
-     * @param pontos    Lista de pontos adquiridos de acordo com a simulação
-     * @return          Retorna o maior valor de uma lista de pontos
-     */
-    public int retornaMaximo(List<Integer> pontos) {
-        int maior = Integer.MIN_VALUE;
-        int posicao = -1;
-
-        for (int i = 0; i < pontos.size(); i++) {
-            if (pontos.get(i) > maior) {
-                maior = pontos.get(i);
-                posicao = i;
-            }
-        }
-
-        return pontos.get(posicao);
-    }
-
-    public int minimax(int profundidade, int vez) {
-        // Verifica se houve uma vitoria por parte do jogador e dá valor -1 a essa
-        // possibilidade ;; Lembrete o jogador humano não pode ganhar para a IA
-        if (Vitorias()) {
-            return -1;
-        }
-        // Verifica se houve uma vitoria por parte da IA e dá valor +1 a essa possibilidade
-        else if (Perdas()) {
-            return +1;
-        }
-        
-        // Pega uma lista de jogadas possiveis, se tal lista é vazia houve um empate,
-        // e essa possibilidade recebe pontuacao igual a 0
-        List<Jogada> jogadasDisponivelAux = getJogadaDisponiveis();
-        if (jogadasDisponivelAux.isEmpty()) {
-            return 0;
-        }
-        List<Integer> pontuacao = new ArrayList<>();
-
-        // Para todas as jogadas possiveis testa recursivamente quais são as melhores
-        // possibilidades de ganho para a IA
-        for (int i = 0; i < jogadasDisponivelAux.size(); i++) {
-            Jogada jogadaAtual = jogadasDisponivelAux.get(i);
-
-            // Se a vez for do computador, chama recursivamente minimax e armazena o retorno
-            // dessa execução, no final adiciona a pontuação de retorno a lista de pontuações
-            // de todas as jogadas disponiveis, se a profundidade for 0 então temos que essa
-            // é a próxima jogada do computador, logo salvamos essa jogada para depois compararmos
-            // com as outras, e verificarmos se ela é ou não a melhor jogada a ser efetuada
-            if (vez == COMPUTADOR) {
-                fazerJogadaComputadorFalso(jogadaAtual);
-                int pontuacaoAtual = minimax(profundidade + 1, PESSOA);
-                pontuacao.add(pontuacaoAtual);
-
-                if (profundidade == 0) {
-                    nosFilhos.add(new Classificacao(pontuacaoAtual, jogadaAtual));
-                }
-            }
-            // Faz a mesma simulação agora para a vez da pessoa
-            else if (vez == PESSOA) {
-                fazerJogadaPessoaFalso(jogadaAtual);
-                pontuacao.add((minimax(profundidade + 1, COMPUTADOR)));
-            }
-            res[jogadaAtual.i][jogadaAtual.j].setText("");
-        }
-
-        return vez == COMPUTADOR ? retornaMaximo(pontuacao) : retornaMinimo(pontuacao);
-    }
-
+    
     // Quando ocorrer um clique em algum ponto do jogo executar a inteligência
     // artificial para determinar a jogada da IA
     @Override
@@ -504,11 +399,13 @@ public class InterfaceVI implements ActionListener {
             return;
         }
         
-        // Procura pela melhor jogada possível para o computador, e efetua a mesma
+        // EXECUTA A IA
         long start_time = System.nanoTime();    // Tempo inicial da execução da IA
         nosFilhos = new ArrayList<>();
-        minimax(0, COMPUTADOR);
-        Jogada jogadaIA = retornaMelhorJogada();
+        
+        // IA CALL GOES HERE
+        
+        Jogada jogadaIA = new Jogada(1,1);
         long end_time = System.nanoTime();      // Tempo final da execução da IA
         fazerJogadaComputador(jogadaIA);
         
