@@ -1,6 +1,6 @@
 package ia.ufba.trabalho.busca.cega;
 
-public class Logical {
+/*public class Logical {
  ArrayList<String> arvore = new ArrayList<String>();
 public String resultado;
 public void Profundidade(ArrayList<String> arvore,String solucao, int limite){
@@ -17,3 +17,4 @@ public void Profundidade(ArrayList<String> arvore,String solucao, int limite){
 }
 
 }
+*/
