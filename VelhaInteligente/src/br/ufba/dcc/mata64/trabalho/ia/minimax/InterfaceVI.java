@@ -1,4 +1,4 @@
-/*
+/**
  * Trabalho de MATA64 - Inteligência Artificial
  * 
  * Implementação da inteligência artificial para o Jogo da Velha (em inglês TicTacToe)
@@ -11,72 +11,104 @@
  */
 package br.ufba.dcc.mata64.trabalho.ia.minimax;
 
-import javax.swing.JFrame;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.Color;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.LineBorder;
-import java.awt.Color;
+import javax.swing.JFrame;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import java.util.ArrayList;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.List;
+import java.io.IOException;
 
-
+/**
+ * Classe que representa Jogadas possiveis de ser executada, de acordo
+ * com as entradas disponiveis na nossa matriz.
+*/
 class Jogada {
 
-    int x, y;
+    int i, j; // Coordenadas das jogadas
 
-    public Jogada(int x, int y) {
-        this.x = x;
-        this.y = y;
+    /**
+     * Constroi uma jogada, com as coordenadas passadas.
+     *
+     * @param i linha
+     * @param j coluna
+     */
+    public Jogada(int i, int j) {
+        this.i = i;
+        this.j = j;
     }
     
     @Override
     public String toString() {
-        return "[" + x + ", " + y + "]";
+        return "[" + i + ", " + j + "]";
     }
 }
 
+/**
+ * Classificacao e uma classe que contem a pontuacao de uma determinada jogada,
+ * Ela é utilizada para classificar o quao bom uma jogada pode ser.
+ */
 class Classificacao {
 
     int pontuacao;
-    Jogada jogadas;
+    Jogada jogada;
 
-    Classificacao(int pontuacao, Jogada jogadas) {
+    /**
+     * Constroi a classificacao da jogada, tendo a pontuacao e a jogada em si.
+     *
+     * @param pontuacao pontuacao da jogada
+     * @param jogada    jogada
+     */
+    Classificacao(int pontuacao, Jogada jogada) {
         this.pontuacao = pontuacao;
-        this.jogadas = jogadas;
+        this.jogada = jogada;
     }
 }
 
+/**
+ * Classe principal da aplicação, define a interface gráfica e a IA.
+ */
 public class InterfaceVI implements ActionListener {
 
-    static int      count = 0;
-    static int      numPerdas = 0;
-    static int      numEmpates = 0;
-    static int      numVitorias = 0; // Imposs�vel!
-    static JFrame   frmVelhaInteligente;
-    static JButton  res[][] = new JButton[3][3];
-    static JLabel   vit;
-    static JLabel   emp;
-    static JLabel   per;
-    static int      COMPUTADOR = 0;
-    static int      PESSOA = 1;
+    // Variaveis do jogo
+    static int      count = 0;                      // Contador de turnos do jogo
+    static int      numEmpates = 0;                 // Numero de empates
+    static int      numPerdas = 0;                  // Numero de perdas do jogador
+    static int      numVitorias = 0;                // Numero de vitorias do jogador
+    
+    // Variaveis de interface
+    static JFrame   frmVelhaInteligente;            // Frame do jogo
+    static JButton  res[][] = new JButton[3][3];    // Matriz com todos os botões
+    static JLabel   vit;                            // Label com as vitorias
+    static JLabel   emp;                            // Label com os empates  
+    static JLabel   per;                            // Label com as derrotas
+    
+    // Definições de turno
+    static int      COMPUTADOR = 0;                 // Representa um jogador                 
+    static int      PESSOA = 1;                     // Representa uma pessoa
 
     List<Jogada>        jogadasDisponiveis;
     List<Classificacao> nosFilhos;
     Jogada              computador;
 
+    // Constroi a interface gráfica
+    // <editor-fold defaultstate="collapsed" desc="Inicializador da interface grafica">
     private void initialize() {
         frmVelhaInteligente = new JFrame();
         frmVelhaInteligente.setResizable(false);
-        frmVelhaInteligente.setIconImage(Toolkit.getDefaultToolkit()
-                .getImage(InterfaceVI.class.getResource("../assets/icon.png")));
+        frmVelhaInteligente.setIconImage(Toolkit
+                .getDefaultToolkit()
+                .getImage(getClass().getResource("/br/ufba/dcc/mata64/trabalho/ia/assets/icon.png")));
         frmVelhaInteligente.setTitle("Velha Inteligente - Minimax");
         frmVelhaInteligente.setBounds(100, 100, 638, 476);
         frmVelhaInteligente.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -169,11 +201,18 @@ public class InterfaceVI implements ActionListener {
         frmVelhaInteligente.getContentPane().add(panel_1);
 
     }
-
+    // </editor-fold>
+    
+    // Construtor do jogo
+    // <editor-fold defaultstate="collapsed" desc="Construtor da classe jogo">
     public InterfaceVI() {
         initialize();
     }
-
+    // </editor-fold>
+    
+    /**
+     * Reseta a interface do jogo e os contadores de vitoria e derrotas.
+     */
     private void reset() {
         novojogo();
         numVitorias = 0;
@@ -184,6 +223,9 @@ public class InterfaceVI implements ActionListener {
         per.setText("Perdas: " + numPerdas);
     }
 
+    /**
+     * Inicia um novo jogo e habilita os botões.
+     */
     private void novojogo() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -197,6 +239,11 @@ public class InterfaceVI implements ActionListener {
                            + "--------------------------\n");
     }
 
+    /**
+     * Checa se o humano perdeu o jogo
+     * 
+     * @return Retorna 'true' se o jogador perdeu e 'false' se o jogo pode continuar
+     */
     private boolean Perdas() {
         if (res[0][0].getText().equals("O") && res[0][1].getText().equals("O") && res[0][2].getText().equals("O")
                 || res[1][0].getText().equals("O") && res[1][1].getText().equals("O") && res[1][2].getText().equals("O")
@@ -212,7 +259,12 @@ public class InterfaceVI implements ActionListener {
         return false;
     }
 
-    private boolean Vitorias() { // Imposs�vel!
+    /**
+     * Checa se o humano venceu o jogo
+     * 
+     * @return Retorna 'true' se o jogador venceu e 'false' se o jogo pode continuar
+     */
+    private boolean Vitorias() {
         if (res[0][0].getText().equals("X") && res[0][1].getText().equals("X") && res[0][2].getText().equals("X")
                 || res[1][0].getText().equals("X") && res[1][1].getText().equals("X") && res[1][2].getText().equals("X")
                 || res[2][0].getText().equals("X") && res[2][1].getText().equals("X") && res[2][2].getText().equals("X")
@@ -227,6 +279,11 @@ public class InterfaceVI implements ActionListener {
         return (false);
     }
 
+    /**
+     * Checa se houve empate no jogo
+     * 
+     * @return Retorna 'true' se o houve empate e 'false' se o jogo pode continuar
+     */
     private boolean Empates() {
         if (count == 9) {
             return (true);
@@ -234,8 +291,13 @@ public class InterfaceVI implements ActionListener {
         return (false);
     }
 
+    /**
+     * Verifica se o jogo chegou ao fim
+     * 
+     * @return Retorna 'true' se o jogo foi acabou, e 'false' se o ele puder continuar
+     */
     private boolean Verifica() {
-        if (Vitorias()) {
+        if (Vitorias()) {       // Verifica se houve uma vitoria da pessoa
             JOptionPane.showMessageDialog(null, "Parab�ns, voc� ganhou!", "GANHOU!", JOptionPane.INFORMATION_MESSAGE);
             System.out.println("----- Vitoria Humano -----\n"
                              + "--------------------------");
@@ -243,7 +305,7 @@ public class InterfaceVI implements ActionListener {
             numVitorias += 1;
             vit.setText("Vitórias: " + numVitorias);
             return true;
-        } else if (Perdas()) {
+        } else if (Perdas()) {  // Verifica se houve uma vitoria do computador
             JOptionPane.showMessageDialog(null, "Que pena, voc� perdeu!", "PERDEU!", JOptionPane.INFORMATION_MESSAGE);
             System.out.println("------- Vitoria IA -------\n"
                              + "--------------------------");
@@ -251,7 +313,7 @@ public class InterfaceVI implements ActionListener {
             numPerdas += 1;
             per.setText("Perdas: " + numPerdas);
             return true;
-        } else if (Empates()) {
+        } else if (Empates()) { // Verifica se houve um empate
             JOptionPane.showMessageDialog(null, "Deu Velha!", "EMPATOU!", JOptionPane.INFORMATION_MESSAGE);
             System.out.println("--------- Empate ---------\n"
                              + "--------------------------");
@@ -264,6 +326,12 @@ public class InterfaceVI implements ActionListener {
         return false;
     }
 
+    /**
+     * Retorna uma lista com as jogadas disponiveis no jogo, de acordo com as
+     * valores da matriz atual.
+     * 
+     * @return Retorna uma lista de jogadas possiveis
+     */
     List<Jogada> getJogadaDisponiveis() {
         jogadasDisponiveis = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
@@ -277,20 +345,42 @@ public class InterfaceVI implements ActionListener {
         return jogadasDisponiveis;
     }
 
+    /**
+     * Modifica a interface de acordo com a jogada do computador
+     * 
+     * @param jogada Jogada que a inteligência artificial deseja fazer
+     */
     void fazerJogadaComputador(Jogada jogada) {
-        res[jogada.x][jogada.y].setText("O");
-        res[jogada.x][jogada.y].setEnabled(false);
+        res[jogada.i][jogada.j].setText("O");
+        res[jogada.i][jogada.j].setEnabled(false);
         count += 1;
     }
 
+    /**
+     * Apenas modifica a matriz para verficar as possibilidades de jogada da IA,
+     * sem modificar a interface
+     * 
+     * @param jogada Jogada que a inteligência artificial deseja fazer
+     */
     void fazerJogadaComputadorFalso(Jogada jogada) {
-        res[jogada.x][jogada.y].setText("O");
+        res[jogada.i][jogada.j].setText("O");
     }
 
+    /**
+     * Apenas modifica a matriz para verficar as possibilidades de jogada do jogador humano,
+     * sem modificar a interface
+     * 
+     * @param jogada Jogada que a inteligência artificial deseja fazer
+     */
     void fazerJogadaPessoaFalso(Jogada jogada) {
-        res[jogada.x][jogada.y].setText("X");
+        res[jogada.i][jogada.j].setText("X");
     }
 
+    /**
+     * Retorna a melhor jogada possível, para a IA
+     * 
+     * @return Retorna a melhor jogada dentre uma lista de jogadas possiveis
+     */
     Jogada retornaMelhorJogada() {
         int MAX = Integer.MIN_VALUE;
         int melhor = -1;
@@ -302,9 +392,15 @@ public class InterfaceVI implements ActionListener {
             }
         }
 
-        return nosFilhos.get(melhor).jogadas;
+        return nosFilhos.get(melhor).jogada;
     }
 
+    /**
+     * Retorna o menor valor de uma lista de pontos adquiridos da simulação de jogadas
+     * 
+     * @param pontos    Lista de pontos adquiridos de acordo com a simulação
+     * @return          Retorna o menor valor de uma lista de pontos
+     */
     public int retornaMinimo(List<Integer> pontos) {
         int menor = Integer.MAX_VALUE;
         int posicao = -1;
@@ -318,7 +414,13 @@ public class InterfaceVI implements ActionListener {
 
         return pontos.get(posicao);
     }
-
+    
+    /**
+     * Retorna o maior valor de uma lista de pontos adquiridos da simulação de jogadas
+     * 
+     * @param pontos    Lista de pontos adquiridos de acordo com a simulação
+     * @return          Retorna o maior valor de uma lista de pontos
+     */
     public int retornaMaximo(List<Integer> pontos) {
         int maior = Integer.MIN_VALUE;
         int posicao = -1;
@@ -334,41 +436,59 @@ public class InterfaceVI implements ActionListener {
     }
 
     public int minimax(int profundidade, int vez) {
+        // Verifica se houve uma vitoria por parte do jogador e dá valor -1 a essa
+        // possibilidade ;; Lembrete o jogador humano não pode ganhar para a IA
         if (Vitorias()) {
             return -1;
-        } else if (Perdas()) {
+        }
+        // Verifica se houve uma vitoria por parte da IA e dá valor +1 a essa possibilidade
+        else if (Perdas()) {
             return +1;
         }
-
+        
+        // Pega uma lista de jogadas possiveis, se tal lista é vazia houve um empate,
+        // e essa possibilidade recebe pontuacao igual a 0
         List<Jogada> jogadasDisponivelAux = getJogadaDisponiveis();
         if (jogadasDisponivelAux.isEmpty()) {
             return 0;
         }
         List<Integer> pontuacao = new ArrayList<>();
 
+        // Para todas as jogadas possiveis testa recursivamente quais são as melhores
+        // possibilidades de ganho para a IA
         for (int i = 0; i < jogadasDisponivelAux.size(); i++) {
-            Jogada j = jogadasDisponivelAux.get(i);
+            Jogada jogadaAtual = jogadasDisponivelAux.get(i);
 
+            // Se a vez for do computador, chama recursivamente minimax e armazena o retorno
+            // dessa execução, no final adiciona a pontuação de retorno a lista de pontuações
+            // de todas as jogadas disponiveis, se a profundidade for 0 então temos que essa
+            // é a próxima jogada do computador, logo salvamos essa jogada para depois compararmos
+            // com as outras, e verificarmos se ela é ou não a melhor jogada a ser efetuada
             if (vez == COMPUTADOR) {
-                fazerJogadaComputadorFalso(j);
+                fazerJogadaComputadorFalso(jogadaAtual);
                 int pontuacaoAtual = minimax(profundidade + 1, PESSOA);
                 pontuacao.add(pontuacaoAtual);
 
                 if (profundidade == 0) {
-                    nosFilhos.add(new Classificacao(pontuacaoAtual, j));
+                    nosFilhos.add(new Classificacao(pontuacaoAtual, jogadaAtual));
                 }
-            } else if (vez == PESSOA) {
-                fazerJogadaPessoaFalso(j);
+            }
+            // Faz a mesma simulação agora para a vez da pessoa
+            else if (vez == PESSOA) {
+                fazerJogadaPessoaFalso(jogadaAtual);
                 pontuacao.add((minimax(profundidade + 1, COMPUTADOR)));
             }
-            res[j.x][j.y].setText("");
+            res[jogadaAtual.i][jogadaAtual.j].setText("");
         }
 
         return vez == COMPUTADOR ? retornaMaximo(pontuacao) : retornaMinimo(pontuacao);
     }
 
+    // Quando ocorrer um clique em algum ponto do jogo executar a inteligência
+    // artificial para determinar a jogada da IA
     @Override
     public void actionPerformed(ActionEvent e) {
+        // Procura pela jogada efetuada, pega os indices da mesma e altera a interface
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 if (e.getSource() == res[i][j]) {
@@ -379,26 +499,37 @@ public class InterfaceVI implements ActionListener {
             }
         }
 
-        // X = i ; Y = j
+        // Verifica se ainda é possível continuar, ou se houve uma vitoria, derrota ou empate
         if (Verifica()) {
             return;
         }
-
+        
+        // Procura pela melhor jogada possível para o computador, e efetua a mesma
+        long start_time = System.nanoTime();    // Tempo inicial da execução da IA
         nosFilhos = new ArrayList<>();
         minimax(0, COMPUTADOR);
+        Jogada jogadaIA = retornaMelhorJogada();
+        long end_time = System.nanoTime();      // Tempo final da execução da IA
+        fazerJogadaComputador(jogadaIA);
+        
+        // Tempo em ns - Nano segundos para executar a IA
+        NumberFormat formatter = new DecimalFormat("#0.00");
+        double difference = (end_time - start_time)/1e6;
+        System.out.println(   "-------- RODADA " + count + " --------\n"
+                            + "Custo em ns: " + formatter.format(difference) + "\n"
+                            +"--------------------------");
 
-        System.out.println("-------- RODADA " + count + " --------");
         nosFilhos.stream().forEach((classificacao) -> {
-            System.out.println("Jogada: " + classificacao.jogadas
+            System.out.println("Jogada: " + classificacao.jogada
             + " Pontuacao: " + classificacao.pontuacao);
         });
         System.out.println("--------------------------");
-
-        fazerJogadaComputador(retornaMelhorJogada());
-
+        
+        // Verifica se houve uma vitoria, derrota ou empate por parte do computador ou se o jogo pode continuar
         Verifica();
     }
 
+    // Inicializa a interface e o jogo
     @SuppressWarnings("unused")
     public static void main(String[] args) throws IOException, InterruptedException {
         InterfaceVI interfaceVI = new InterfaceVI();
