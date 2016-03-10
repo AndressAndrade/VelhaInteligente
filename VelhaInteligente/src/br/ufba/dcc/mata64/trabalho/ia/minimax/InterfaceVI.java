@@ -1,8 +1,8 @@
 /**
- * Trabalho de MATA64 - Inteligência Artificial
+ * Trabalho de MATA64 - Inteligencia Artificial
  * 
- * Implementação da inteligência artificial para o Jogo da Velha (em ingles TicTacToe)
- * utilizando o conceito de minimazação, maximzação minimax.
+ * Implementação da inteligencia artificial para o Jogo da Velha (em ingles TicTacToe)
+ * utilizando o conceito de minimazacao, maximzacao minimax.
  * 
  * @author Andressa Andrade
  * @author Renata Antunes
