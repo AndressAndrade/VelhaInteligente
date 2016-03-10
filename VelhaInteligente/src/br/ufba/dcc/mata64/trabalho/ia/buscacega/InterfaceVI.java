@@ -1,8 +1,8 @@
 /**
- * Trabalho de MATA64 - Inteligência Artificial
+ * Trabalho de MATA64 - Inteligencia Artificial
  * 
- * Implementação da inteligência artificial para o Jogo da Velha (em inglês TicTacToe)
- * utilizando o conceito de minimazação, maximzação minimax.
+ * Implementação da inteligencia artificial para o Jogo da Velha (em ingles TicTacToe)
+ * utilizando o conceito de minimazacao, maximzacao minimax.
  * 
  * @author Andressa Andrade
  * @author Renata Antunes
@@ -76,7 +76,7 @@ class Classificacao {
 }
 
 /**
- * Classe principal da aplicação, define a interface gráfica e a IA.
+ * Classe principal da aplicacao, define a interface grafica e a IA.
  */
 public class InterfaceVI implements ActionListener {
 
@@ -88,20 +88,19 @@ public class InterfaceVI implements ActionListener {
     
     // Variaveis de interface
     static JFrame   frmVelhaInteligente;            // Frame do jogo
-    static JButton  res[][] = new JButton[3][3];    // Matriz com todos os botões
+    static JButton  res[][] = new JButton[3][3];    // Matriz com todos os botoes
     static JLabel   vit;                            // Label com as vitorias
     static JLabel   emp;                            // Label com os empates  
     static JLabel   per;                            // Label com as derrotas
     
-    // Definições de turno
+    // Definicoes de turno
     static int      COMPUTADOR = 0;                 // Representa um jogador                 
     static int      PESSOA = 1;                     // Representa uma pessoa
 
     List<Jogada>        jogadasDisponiveis;
-    List<Classificacao> nosFilhos;
     Jogada              computador;
 
-    // Constroi a interface gráfica
+    // Constroi a interface grafica
     // <editor-fold defaultstate="collapsed" desc="Inicializador da interface grafica">
     private void initialize() {
         frmVelhaInteligente = new JFrame();
@@ -109,7 +108,7 @@ public class InterfaceVI implements ActionListener {
         frmVelhaInteligente.setIconImage(Toolkit
                 .getDefaultToolkit()
                 .getImage(getClass().getResource("/br/ufba/dcc/mata64/trabalho/ia/assets/icon.png")));
-        frmVelhaInteligente.setTitle("Velha Inteligente - Minimax");
+        frmVelhaInteligente.setTitle("Velha Inteligente - Buscacega");
         frmVelhaInteligente.setBounds(100, 100, 638, 476);
         frmVelhaInteligente.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frmVelhaInteligente.getContentPane().setLayout(null);
@@ -143,7 +142,7 @@ public class InterfaceVI implements ActionListener {
 
         JPanel panel = new JPanel();
         panel.setToolTipText("");
-        panel.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Est\u00E1tisticas", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
+        panel.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Estatísticas", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
         panel.setBounds(399, 74, 213, 237);
         frmVelhaInteligente.getContentPane().add(panel);
         panel.setLayout(null);
@@ -224,7 +223,7 @@ public class InterfaceVI implements ActionListener {
     }
 
     /**
-     * Inicia um novo jogo e habilita os botões.
+     * Inicia um novo jogo e habilita os botoes.
      */
     private void novojogo() {
         for (int i = 0; i < 3; i++) {
@@ -294,7 +293,7 @@ public class InterfaceVI implements ActionListener {
     /**
      * Verifica se o jogo chegou ao fim
      * 
-     * @return Retorna 'true' se o jogo foi acabou, e 'false' se o ele puder continuar
+     * @return Retorna 'true' se o jogo acabou, e 'false' se o ele puder continuar
      */
     private boolean Verifica() {
         if (Vitorias()) {       // Verifica se houve uma vitoria da pessoa
@@ -360,7 +359,7 @@ public class InterfaceVI implements ActionListener {
      * Apenas modifica a matriz para verficar as possibilidades de jogada da IA,
      * sem modificar a interface
      * 
-     * @param jogada Jogada que a inteligência artificial deseja fazer
+     * @param jogada Jogada que a inteligencia artificial deseja fazer
      */
     void fazerJogadaComputadorFalso(Jogada jogada) {
         res[jogada.i][jogada.j].setText("O");
@@ -370,16 +369,73 @@ public class InterfaceVI implements ActionListener {
      * Apenas modifica a matriz para verficar as possibilidades de jogada do jogador humano,
      * sem modificar a interface
      * 
-     * @param jogada Jogada que a inteligência artificial deseja fazer
+     * @param jogada Jogada que a inteligencia artificial deseja fazer
      */
     void fazerJogadaPessoaFalso(Jogada jogada) {
         res[jogada.i][jogada.j].setText("X");
     }
 
-    // ----- IA IMPLEMENTATION
-    
-    
-    // Quando ocorrer um clique em algum ponto do jogo executar a inteligência
+    public boolean profundidade(int profundidade, int vez) {
+        // Verifica se houve uma vitoria por parte do jogador e da valor -1 a essa
+        // possibilidade ;; Lembrete o jogador humano nao pode ganhar para a IA
+        if (Vitorias()){
+            return false;
+        }
+        // Verifica se houve uma vitoria por parte da IA e da valor +1 a essa possibilidade
+        else if (Perdas()){
+            return true;
+        }
+        
+        // Pega uma lista de jogadas possiveis, se tal lista eh vazia houve um empate,
+        // e essa possibilidade recebe pontuacao igual a 0
+        List<Jogada> jogadasDisponivelAux = getJogadaDisponiveis();
+        if (jogadasDisponivelAux.isEmpty()) {
+            return true;
+        }
+
+        // Disponibilidade do nó
+        boolean retorno = true;
+        
+        // Para todas as jogadas possiveis testa recursivamente quais sao as melhores
+        // possibilidades de ganho para a IA
+        for (int i = 0; i < jogadasDisponivelAux.size(); i++) {
+            Jogada jogadaAtual = jogadasDisponivelAux.get(i);
+
+            // Se a vez for do computador, chama recursivamente minimax e armazena o retorno
+            // dessa execução, no final adiciona a pontuação de retorno a lista de pontuacoes
+            // de todas as jogadas disponiveis, se a profundidade for 0 entao temos que essa
+            // eh a proxima jogada do computador, logo salvamos essa jogada para depois compararmos
+            // com as outras, e verificarmos se ela eh ou não a melhor jogada a ser efetuada
+            if (vez == COMPUTADOR) {
+                fazerJogadaComputadorFalso(jogadaAtual);
+                retorno = profundidade(profundidade + 1, PESSOA);
+
+                // Se a profundidade for igual a 0, salva o estado atual se a 
+                // pontuacao retornada resultar num empate ou vitoria
+                if(retorno){
+                    if ((profundidade == 0)) {
+                        computador = jogadaAtual;
+                    }
+                    res[jogadaAtual.i][jogadaAtual.j].setText("");
+                    break;
+                }
+            }
+            // Faz a mesma simulacao agora para a vez da pessoa
+            else if (vez == PESSOA) {
+                fazerJogadaPessoaFalso(jogadaAtual);
+                retorno =  profundidade(profundidade + 1, COMPUTADOR);
+                if(retorno){
+                    res[jogadaAtual.i][jogadaAtual.j].setText("");
+                    break;
+                }
+            }
+            res[jogadaAtual.i][jogadaAtual.j].setText("");
+        }
+        
+        return retorno;
+    }
+
+    // Quando ocorrer um clique em algum ponto do jogo executar a inteligencia
     // artificial para determinar a jogada da IA
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -394,33 +450,23 @@ public class InterfaceVI implements ActionListener {
             }
         }
 
-        // Verifica se ainda é possível continuar, ou se houve uma vitoria, derrota ou empate
+        // Verifica se ainda eh possivel continuar, ou se houve uma vitoria, derrota ou empate
         if (Verifica()) {
             return;
         }
         
-        // EXECUTA A IA
-        long start_time = System.nanoTime();    // Tempo inicial da execução da IA
-        nosFilhos = new ArrayList<>();
-        
-        // IA CALL GOES HERE
-        
-        Jogada jogadaIA = new Jogada(1,1);
-        long end_time = System.nanoTime();      // Tempo final da execução da IA
-        fazerJogadaComputador(jogadaIA);
+        // Procura pela melhor jogada possivel para o computador, e efetua a mesma
+        long start_time = System.nanoTime();    // Tempo inicial da execucao da IA
+        profundidade(0, COMPUTADOR);
+        long end_time = System.nanoTime();      // Tempo final da execucao da IA
+        fazerJogadaComputador(computador);
         
         // Tempo em ns - Nano segundos para executar a IA
         NumberFormat formatter = new DecimalFormat("#0.00");
         double difference = (end_time - start_time)/1e6;
         System.out.println(   "-------- RODADA " + count + " --------\n"
-                            + "Custo em ns: " + formatter.format(difference) + "\n"
+                            + "Tempo execucao em ns: " + formatter.format(difference) + "\n"
                             +"--------------------------");
-
-        nosFilhos.stream().forEach((classificacao) -> {
-            System.out.println("Jogada: " + classificacao.jogada
-            + " Pontuacao: " + classificacao.pontuacao);
-        });
-        System.out.println("--------------------------");
         
         // Verifica se houve uma vitoria, derrota ou empate por parte do computador ou se o jogo pode continuar
         Verifica();
